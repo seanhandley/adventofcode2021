@@ -47,11 +47,16 @@
 # How many measurements are larger than the previous measurement?
 
 def input
-  @input ||= STDIN.read.split("\n").map(&:to_i)
+  @input ||= STDIN.
+               read.
+               split("\n").
+               map(&:to_i)
 end
 
 def count_increases(sequence)
-  sequence.each_cons(2).count { |a, b| a < b }
+  sequence.
+    each_cons(2).
+    count { |a, b| a < b }
 end
 
 if __FILE__ == $0

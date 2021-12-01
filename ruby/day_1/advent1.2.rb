@@ -39,9 +39,13 @@
 require_relative "./advent1.1"
 
 def sum_of_sliding_three(sequence)
-  sequence.each_cons(3).map(&:sum)
+  sequence.
+    each_cons(3).
+    map(&:sum)
 end
 
 if __FILE__ == $0
-  puts count_increases(sum_of_sliding_three(input))
+  puts count_increases(
+    sum_of_sliding_three(input)
+  )
 end
