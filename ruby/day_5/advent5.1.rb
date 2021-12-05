@@ -42,10 +42,13 @@
 #
 # Consider only horizontal and vertical lines. At how many points do at least two lines overlap?
 
+require "colorize"
+
 def input
   @input ||= STDIN.readlines.
-               map { |line| line.split(" -> ").
-                 map { |e| e.split(",").map(&:to_i) }
+               map { |line|
+                 line.split(" -> ").
+                   map { |e| e.split(",").map(&:to_i) }
                }
 end
 
@@ -79,6 +82,39 @@ def danger_count(plot)
   plot.values.select { |v| v > 1 }.count
 end
 
+def pad(row, length)
+  row << "." while(row.length < length)
+  row
+end
+
+def color(s)
+  return "." if s == "."
+  case s
+  when "1"
+    s.to_s.colorize(background: :green).blink
+  when "2"
+    s.to_s.colorize(background: :yellow).blink
+  else
+    s.to_s.colorize(background: :red).blink
+  end
+end
+
+def draw(plot)
+  output = plot.each_with_object([]) do |(k, v), out|
+    out.send(:[]=, k[0], []) unless out.send(:[], k[0])
+    out.send(:[], k[0]).send(:[]=, k[1], v)
+  end.compact.map do |row|
+    row.map { |e| e ? e : "." }.join
+  end
+  longest = output.sort_by(&:length).last.length
+  output.map do |row|
+    pad(row, longest)
+  end.map do |row|
+    puts row.chars.map { |e| color(e) }.join
+  end
+end
+
 if __FILE__ == $0
   puts danger_count(plot(input_without_diagonals))
+  # draw(plot(input))
 end
