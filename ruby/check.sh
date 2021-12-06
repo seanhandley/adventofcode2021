@@ -17,7 +17,7 @@ function test {
   popd > /dev/null
 }
 
-for i in {1..5}
+for i in {1..6}
 do
   for j in {1..2}
   do
