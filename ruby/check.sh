@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 FILE=error.txt
 
@@ -21,6 +21,11 @@ function test {
   fi
 }
 
+START=$(date +%s)
+
+echo "Running tests:"
+echo ""
+
 for i in {1..11}
 do
   for j in {1..2}
@@ -30,6 +35,13 @@ do
 done
 
 wait
+
+END=$(date +%s)
+
+RUNTIME=$((END-START))
+
+echo ""
+echo "Completed in $RUNTIME second(s)."
 
 if [[ -f "$FILE" ]]; then
   rm $FILE
