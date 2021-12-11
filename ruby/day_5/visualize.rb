@@ -42,49 +42,36 @@
 #
 # Consider only horizontal and vertical lines. At how many points do at least two lines overlap?
 
-def input
-  @input ||= STDIN.readlines.
-               map { |line|
-                 line.split(" -> ").
-                   map { |e| e.split(",").map(&:to_i) }
-               }
-end
+require "colorize"
+require_relative "./advent5.1"
 
-def input_without_diagonals
-  input.select { |a, b| a[0] == b[0] || a[1] == b[1] }
-end
-
-def points(a, b)
-  if a > b
-    a.downto(b).to_a
+def color(s)
+  return "." if s == "."
+  case s
+  when "1"
+    s.to_s.colorize(background: :green).blink
+  when "2"
+    s.to_s.colorize(background: :yellow).blink
   else
-    a.upto(b).to_a
+    s.to_s.colorize(background: :red).blink
   end
 end
 
-def equal_zip(a, b)
-  a << a.last while(a.length < b.length)
-  b << b.last while(b.length < a.length)
-  a.zip(b)
-end
-
-def plot(input)
-  input.each_with_object(Hash.new(0)) do |(a, b), plot|
-    equal_zip(points(a[0], b[0]), points(a[1], b[1])).each do |y, x|
-      plot[[y, x]] += 1
-    end
+def draw(plot)
+  output = plot.each_with_object([]) do |(k, v), out|
+    out.send(:[]=, k[0], []) unless out.send(:[], k[0])
+    out.send(:[], k[0]).send(:[]=, k[1], v)
+  end.compact.map do |row|
+    row.map { |e| e ? e : "." }.join
   end
-end
-
-def danger_count(plot)
-  plot.values.select { |v| v > 1 }.count
-end
-
-def pad(row, length)
-  row << "." while(row.length < length)
-  row
+  longest = output.sort_by(&:length).last.length
+  output.map do |row|
+    pad(row, longest)
+  end.map do |row|
+    puts row.chars.map { |e| color(e) }.join
+  end
 end
 
 if __FILE__ == $0
-  puts danger_count(plot(input_without_diagonals))
+  draw(plot(input))
 end
