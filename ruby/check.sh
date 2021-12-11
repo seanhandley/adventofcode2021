@@ -21,8 +21,10 @@ for i in {1..11}
 do
   for j in {1..2}
   do
-    test $i $j
+    test $i $j &
   done
 done
+
+wait
 
 exit $RET
