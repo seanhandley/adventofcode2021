@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
-require "set"
+def input
+  @input ||= STDIN.read.split("\n").
+               map { |line| line.split("|").map(&:split) }
+end
 
 #  aaaa
 # b    c
@@ -10,7 +13,7 @@ require "set"
 # e    f
 #  gggg
 #
-@config = [
+SEGMENTS = [
  # abc efg
   "1110111", # 0
  #   c  f
@@ -31,36 +34,42 @@ require "set"
   "1111111", # 8
  # abcd fg
   "1111011"  # 9
-]
+].freeze
 
 def bin_to_alpha(bin)
-  "abcdefg".chars.zip(bin.chars).select { |_c, b| b == "1" }.map { |c, _b| c }.join
-end
-
-def alpha_to_bin(alpha)
-  "abcdefg".chars.map { |c| alpha.include?(c) ? "1" : "0" }.join
+  "abcdefg".chars.
+    zip(bin.chars).
+    select { |_c, b| b == "1" }.
+    map { |c, _b| c }.
+    join
 end
 
 def rotate(bin, sequence)
   sequence.map { |i| bin.chars[i] }.join
 end
 
-def input
-  @input ||= STDIN.read.split("\n").
-               map { |line| line.split("|").map(&:split) }
+def ciphers
+  @ciphers ||= (0..6).to_a.permutation.map { |sequence|
+     [
+       SEGMENTS.map { |c| rotate(c, sequence) }.
+         map(&method(:bin_to_alpha)).
+         map { |e| e.chars.sort.join }.sort,
+       sequence
+     ]
+   }.to_h
 end
 
-# be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb |
-# fdgacbe cefdb cefbgd gcbe
 def solve(input, output)
-  (0..6).to_a.permutation.each do |sequence|
-    cipher = @config.map { |c| rotate(c, sequence) }.map(&method(:bin_to_alpha)).map { |e| e.chars.sort.join }
-    if cipher.to_set == input.map { |e| e.chars.sort.join }.to_set
-      nums = @config.map { |e| bin_to_alpha(e) }.
-        map { |e| bin_to_alpha(rotate(alpha_to_bin(e), sequence)) }
-      return output.map { |o| nums.each_with_index.detect { |e, i| e.chars.to_set == o.chars.to_set } }.map(&:last).join.to_i
-    end
-  end
+  input_id = input.map { |e| e.chars.sort.join }.sort
+  sequence = ciphers[input_id]
+
+  nums = SEGMENTS.map { |e| bin_to_alpha(rotate(e, sequence)) }
+
+  output.map { |o|
+     nums.each_with_index.detect { |e, i| e.chars.sort == o.chars.sort }
+  }.map(&:last).
+    join.
+    to_i
 end
 
 def result
