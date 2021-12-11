@@ -60,13 +60,15 @@ def ciphers
 end
 
 def solve(input, output)
-  input_id = input.map { |e| e.chars.sort.join }.sort
-  sequence = ciphers[input_id]
+  cipher = input.map { |e| e.chars.sort.join }.sort
+  sequence = ciphers[cipher]
 
-  nums = SEGMENTS.map { |e| bin_to_alpha(rotate(e, sequence)) }
+  digits = SEGMENTS.map { |e| bin_to_alpha(rotate(e, sequence)) }
 
-  output.map { |o|
-     nums.each_with_index.detect { |e, i| e.chars.sort == o.chars.sort }
+  output.map { |output_digit|
+    digits.each_with_index.detect { |input_digit, i|
+      input_digit.chars.sort == output_digit.chars.sort
+    }
   }.map(&:last).
     join.
     to_i
