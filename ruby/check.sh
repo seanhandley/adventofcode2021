@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
 
-RET=0
+FILE=error.txt
 
 function test {
+  RET=0
   pushd "day_$1" > /dev/null
   FILE="output$1.$2.txt"
   EXPECTED=$(cat $FILE)
@@ -15,6 +16,9 @@ function test {
   fi
 
   popd > /dev/null
+  if [[ $RET < 0 ]]
+  then echo "$RET" > error.txt
+  fi
 }
 
 for i in {1..11}
@@ -27,4 +31,7 @@ done
 
 wait
 
-exit $RET
+if [[ -f "$FILE" ]]; then
+  rm $FILE
+  exit 1
+fi
