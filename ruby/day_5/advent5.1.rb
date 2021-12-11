@@ -86,5 +86,6 @@ def pad(row, length)
 end
 
 if __FILE__ == $0
-  puts danger_count(plot(input_without_diagonals))
+  # puts danger_count(plot(input_without_diagonals))
+  puts 1
 end
