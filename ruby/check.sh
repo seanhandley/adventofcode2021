@@ -3,6 +3,9 @@
 FILE=error.txt
 
 function test {
+  if [ ! -d "day_$1" ]; then
+    exit
+  fi
   RET=0
   pushd "day_$1" > /dev/null
   FILE="output$1.$2.txt"
@@ -23,10 +26,10 @@ function test {
 
 START=$(date +%s)
 
-echo "Running tests:"
+echo "Running tests..."
 echo ""
 
-for i in {1..13}
+for i in {1..25}
 do
   for j in {1..2}
   do
