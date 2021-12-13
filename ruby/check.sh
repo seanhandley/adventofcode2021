@@ -11,8 +11,8 @@ function test {
   ACTUAL=$(cat input.txt | $CMD)
 
   if [[ $EXPECTED == $ACTUAL ]]
-  then echo "DAY $1.$2 OK"
-  else echo "DAY $1.$2 FAIL"; echo "EXPECTED: \n'$EXPECTED'"; echo "ACTUAL: \n'$ACTUAL'"; RET=-1
+  then echo "DAY $1.$2 OK" >> ../results.txt
+  else echo "DAY $1.$2 FAIL. Expected '$EXPECTED', but got '$ACTUAL'" >> ../results.txt; RET=-1
   fi
 
   popd > /dev/null
@@ -39,6 +39,9 @@ wait
 END=$(date +%s)
 
 RUNTIME=$((END-START))
+
+cat results.txt | sort -V
+rm results.txt
 
 echo ""
 echo "Completed in $RUNTIME second(s)."
