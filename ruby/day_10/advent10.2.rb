@@ -61,8 +61,8 @@ COSTS = {
 }
 
 def score(chars)
-  stack = []
-  chars.each do |char|
+  score = 0
+  stack = chars.each_with_object([]) do |char, stack|
     if PAIRS.values.include?(char)
       stack.push(char)
     elsif PAIRS[char] == stack.last
@@ -70,9 +70,7 @@ def score(chars)
     else
       return nil
     end
-  end
-  score = 0
-  stack.reverse.each do |char|
+  end.reverse.each do |char|
     score = score * 5 + COSTS[char]
   end
   score

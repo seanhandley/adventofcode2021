@@ -40,18 +40,12 @@ def input
                map(&:chars)
 end
 
-def gamma
+def rate(type)
   input.transpose.map { |seq| seq.group_by { |e| e } }.map do |seq|
-    seq.values.sort_by(&:size).last.first
-  end.join.to_i(2)
-end
-
-def epsilon
-  input.transpose.map { |seq| seq.group_by { |e| e } }.map do |seq|
-    seq.values.sort_by(&:size).first.first
+    seq.values.sort_by(&:size).send({gamma: :last, epsilon: :first}[type]).first
   end.join.to_i(2)
 end
 
 if __FILE__ == $0
-  puts gamma * epsilon
+  puts rate(:gamma) * rate(:epsilon)
 end
