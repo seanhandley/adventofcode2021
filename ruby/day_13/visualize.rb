@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require_relative "./advent13.2"
+require "colorize"
 
 def print_grid(a = nil, i = nil)
   f = @grid.dup
@@ -19,12 +20,17 @@ def print_grid(a = nil, i = nil)
   print_in_ascii_square(f)
 end
 
+def color_picker
+  @color_picker ||= String.colors.cycle
+end
+
 def print_in_ascii_square(grid)
+  color = color_picker.next
   out = []
   bar = "+" + ("-" * (grid.first.length + 2)) + "+"
   out << bar
   grid.each do |row|
-    out << "| " + row.join + " |"
+    out << "| " + row.map { |c| c == SOLID ? SOLID.colorize(color) : c }.join + " |"
   end
   out << bar
   out.each do |row|
