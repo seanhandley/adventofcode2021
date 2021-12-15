@@ -10,7 +10,7 @@ function test {
   pushd "day_$1" > /dev/null
   FILE="output$1.$2.txt"
   EXPECTED=$(cat $FILE)
-  CMD="./advent$1.$2.rb"
+  CMD="bundle exec advent$1.$2.rb"
   ACTUAL=$(cat input.txt | $CMD)
 
   if [[ $EXPECTED == $ACTUAL ]]
