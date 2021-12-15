@@ -20,7 +20,7 @@ function test {
 
   popd > /dev/null
   if [[ $RET < 0 ]]
-  then echo "$RET" > error.txt
+  then echo "$RET" >> error.txt
   fi
 }
 
@@ -46,8 +46,13 @@ RUNTIME=$((END-START))
 cat results.txt | sort -V
 rm results.txt
 
+ERROR_COUNT=0
+if [[ -f "$FILE" ]]; then
+  ERROR_COUNT=$(cat error.txt | wc -l | xargs)
+fi
+
 echo ""
-echo "Completed in $RUNTIME second(s)."
+echo "Completed in $RUNTIME second(s) with $ERROR_COUNT error(s)."
 
 if [[ -f "$FILE" ]]; then
   rm $FILE
