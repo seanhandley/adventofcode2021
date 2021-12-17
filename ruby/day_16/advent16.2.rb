@@ -30,14 +30,9 @@
 
 require_relative "./advent16.1"
 
-def print_terms(terms)
-  terms.each(&method(:debug))
-end
-
 def evaluate(terms)
-  return terms if terms.is_a?(Array) && terms.all? { |e| e.is_a?(Integer) }
   terms.map do |term|
-    print_terms(terms)
+    debug term
     if term.is_a?(Array)
       case term.first
       when 0
@@ -63,6 +58,6 @@ end
 
 if __FILE__ == $0
   i = parse(input)
-  debug "*******"
+  debug "Terms parsed. Evaluating..."
   p evaluate(i).first
 end
